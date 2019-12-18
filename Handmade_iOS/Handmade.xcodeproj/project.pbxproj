@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4D2D7C1923AAB55E0036B6EA /* StarRatingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D2D7C1823AAB55E0036B6EA /* StarRatingView.swift */; };
 		4D41A57623A86664002038AD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D41A57523A86664002038AD /* AppDelegate.swift */; };
 		4D41A57A23A86664002038AD /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D41A57923A86664002038AD /* ViewController.swift */; };
 		4D41A57D23A86664002038AD /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4D41A57B23A86664002038AD /* Main.storyboard */; };
@@ -19,6 +20,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		4D2D7C1823AAB55E0036B6EA /* StarRatingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StarRatingView.swift; sourceTree = "<group>"; };
 		4D41A57223A86664002038AD /* Handmade.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Handmade.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4D41A57523A86664002038AD /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4D41A57923A86664002038AD /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -104,6 +106,7 @@
 			isa = PBXGroup;
 			children = (
 				4D549B2123A981BC00A6746F /* UIViewExtension.swift */,
+				4D2D7C1823AAB55E0036B6EA /* StarRatingView.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -184,6 +187,7 @@
 				4D41A57623A86664002038AD /* AppDelegate.swift in Sources */,
 				4D549B2423A9843A00A6746F /* DetailViewController.swift in Sources */,
 				4D549B2223A981BC00A6746F /* UIViewExtension.swift in Sources */,
+				4D2D7C1923AAB55E0036B6EA /* StarRatingView.swift in Sources */,
 				4D549B2023A95D5300A6746F /* ListTableViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -329,6 +333,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = JAFVLB96C5;
 				INFOPLIST_FILE = Handmade/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -346,6 +351,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = JAFVLB96C5;
 				INFOPLIST_FILE = Handmade/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

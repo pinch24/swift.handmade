@@ -17,81 +17,34 @@ class ViewController: UIViewController {
         
         super.viewDidLoad()
         
-        // JSON from File
-        if let path = Bundle.main.path(forResource: "data", ofType: "json") {
-            
-            do {
-                
-                let data = try Data(contentsOf: URL(fileURLWithPath: path), options: .mappedIfSafe)
-//                let object = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves)
-//
-//                if let json = object as? Dictionary<String, AnyObject>,
-//                    let resultCount = json["resultCount"] as? Int,
-//                    let results = json["results"] as? [Any] {
-//
-//                    print("Count: \(resultCount)")
-//                    print("Results: \(results)")
-//                }
-//                else {
-//
-//                    print("No Results")
-//                }
-                
-                serviceList = try JSONDecoder().decode(ServiceList.self, from: data)
-                //print("JSON Decoder: \(serviceList)")
-                
-                // Show List Table View Controller
-                DispatchQueue.main.async {
-                    
-                    self.performSegue(withIdentifier: "ListTableViewControllerSegue", sender: self)
+        // Json from URL
+        let urlString = "https://itunes.apple.com/search?term=핸드메이드&country=kr&media=software"
+        let escapeString = urlString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? urlString
+
+        if let url = URL(string: escapeString) {
+
+            URLSession.shared.dataTask(with: url) { data, response, error in
+
+                if let data = data {
+
+                    do {
+
+                        self.serviceList = try JSONDecoder().decode(ServiceList.self, from: data)
+                        //print("JSON Decoder: \(serviceList)")
+
+                        // Show List Table View Controller
+                        DispatchQueue.main.async {
+
+                            self.performSegue(withIdentifier: "ListTableViewControllerSegue", sender: self)
+                        }
+                    }
+                    catch let error {
+
+                        print(error)
+                    }
                 }
-            }
-            catch let error {
-                
-                print(error)
-            }
+            }.resume()
         }
-        
-        
-//        // Json from URL
-//        let urlString = "https://itunes.apple.com/search?term=핸드메이드&country=kr&media=software"
-//        let escapeString = urlString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? urlString
-//
-//        if let url = URL(string: escapeString) {
-//
-//            URLSession.shared.dataTask(with: url) { data, response, error in
-//
-//                if let data = data {
-//
-//                    do {
-//
-//                        let res = try JSONDecoder().decode(Response.self, from: data)
-//                        print(res.resultCount)
-//                    }
-//                    catch let error {
-//
-//                        print(error)
-//                    }
-//                }
-//            }.resume()
-//        }
-        
-//        let json = ""
-//        let startIndex = json.index(json.startIndex, offsetBy: 205166)
-//        let endIndex = json.index(startIndex, offsetBy: 100)
-//        print("\(startIndex): " + json[startIndex ... endIndex])
-//
-//        let data = json.data(using: String.Encoding.unicode)!
-//
-//        do {
-//
-//            let res = try JSONDecoder().decode(Response.self, from: data)
-//            print(res.resultCount)
-//        }
-//        catch let error {
-//
-//            print(error)
-//        }
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {

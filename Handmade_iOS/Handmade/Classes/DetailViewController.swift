@@ -16,28 +16,28 @@ class DetailViewController: UIViewController {
     
     @IBOutlet weak var imageScrollView: ImageScrollView!
     
+    @IBOutlet weak var contentView: UIView!
     @IBOutlet weak var trackNameLabel: UILabel!
     @IBOutlet weak var artistNameLabel: UILabel!
     @IBOutlet weak var priceLabel: UILabel!
-    
     @IBOutlet weak var showButton: UIButton!
     @IBOutlet weak var shareButton: UIButton!
-    
     @IBOutlet weak var fileSizeLabel: UILabel!
     @IBOutlet weak var contentRatingLabel: UILabel!
-    
     @IBOutlet weak var versionLabel: UILabel!
-    
     @IBOutlet weak var showReleaseNoteButton: UIButton!
     @IBOutlet weak var releaseNoteLabel: UILabel!
-    
     @IBOutlet weak var descriptionTextView: UITextView!
+    
+    @IBOutlet weak var categoryView: CategoryView!
+    
     
     override func viewDidLoad() {
         
         super.viewDidLoad()
         
         navigationController?.isNavigationBarHidden = false
+        navigationController?.navigationBar.backItem?.title = "핸드메이드"
         
         //print(serviceItem)
         
@@ -90,13 +90,25 @@ class DetailViewController: UIViewController {
         
         // 새로운 기능: 내용
         releaseNoteLabel.text = serviceItem.releaseNotes
-        //releaseNoteLabel.isHidden = true
-        var frame = releaseNoteLabel.frame
-        frame.size.height = 0.0
-        releaseNoteLabel.frame = frame
+        releastNoteButtonTouchUpInside(showReleaseNoteButton)   // 새로운 기능 내용 숨김 처리
+        
+        // 설명
+        descriptionTextView.text = serviceItem.description
+        let text = serviceItem.description
+        let splitText = text.components(separatedBy: "\n")
+        
+        if splitText.count < 10 {
+
+            descriptionTextView.text = text
+        }
+        else {
+
+            descriptionTextView.text = splitText[0 ... 9].joined(separator: "\n")
+            descriptionTextView.text.append("\n\n...")
+        }
         
         // 카테고리
-        descriptionTextView.text = serviceItem.description
+        categoryView.genreList = serviceItem.genres
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -127,21 +139,68 @@ class DetailViewController: UIViewController {
     }
     */
     
+    // UIButton Actions
+    @IBAction func showButtonTouchUpInside(_ sender: UIButton) {
+        
+        let trackViewUrl = serviceItem.trackViewUrl     //.replacingOccurrences(of: "?uo=4", with: "")
+        
+        if let url = URL(string: trackViewUrl) {
+            
+            UIApplication.shared.open(url, options: [:])
+        }
+    }
+    
+    @IBAction func shareButtonTouchUpInside(_ sender: UIButton) {
+        
+        let trackViewUrl = serviceItem.trackViewUrl
+        let items = [trackViewUrl]
+        let viewController = UIActivityViewController(activityItems: items, applicationActivities: nil)
+        viewController.excludedActivityTypes = []
+        present(viewController, animated: true, completion: nil)
+    }
+    
     @IBAction func releastNoteButtonTouchUpInside(_ sender: UIButton) {
         
-        //releaseNoteLabel.isHidden = !sender.isSelected
-        if sender.isSelected {
+        UIView.animate(withDuration: 0.2, animations: {
             
-            var frame = releaseNoteLabel.frame
-            frame.size.height = 0.0
-            releaseNoteLabel.frame = frame
-        }
-        else {
-            
-            var frame = releaseNoteLabel.frame
-            frame.size.height = 41.0
-            releaseNoteLabel.frame = frame
-        }
+            //releaseNoteLabel.isHidden = !sender.isSelected
+            if sender.isSelected {
+                
+                var frame = self.releaseNoteLabel.frame
+                frame.size.height = 0.0
+                self.releaseNoteLabel.frame = frame
+                
+                frame = self.descriptionTextView.frame
+                frame.origin.y = self.releaseNoteLabel.frame.minY
+                self.descriptionTextView.frame = frame
+                
+                frame = self.contentView.frame
+                frame.size.height -= 44.0
+                self.contentView.frame = frame
+                
+                frame = self.categoryView.frame
+                frame.origin.y -= 44.0
+                self.categoryView.frame = frame
+            }
+            else {
+                
+                var frame = self.releaseNoteLabel.frame
+                frame.size.height = 44.0
+                self.releaseNoteLabel.frame = frame
+                
+                frame = self.descriptionTextView.frame
+                frame.origin.y = self.releaseNoteLabel.frame.maxY + 8
+                self.descriptionTextView.frame = frame
+                
+                frame = self.contentView.frame
+                frame.size.height += 44.0
+                self.contentView.frame = frame
+                
+                frame = self.categoryView.frame
+                frame.origin.y += 44.0
+                self.categoryView.frame = frame
+            }
+        })
         
         sender.isSelected = !sender.isSelected
     }
@@ -190,6 +249,43 @@ class ImageScrollView: UIScrollView {
                 addSubview(imageView)
                 
                 x += imageSpace
+            })
+        }
+    }
+}
+
+class CategoryView: UIView {
+    
+    var x = 8, y = 54
+    
+    var genreList: [String]? = nil {
+        
+        didSet {
+            
+            update()
+        }
+    }
+    
+    func update() {
+        
+        if let list = genreList {    // 옵셔널 해제하지 않으면 맵 처리 되지 않음
+            
+            let _ = list.map({ (string) in
+                
+                let text = "  #\(string)  "
+                let textWidth = (text as NSString).size(withAttributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 12)]).width
+                
+                let frame = CGRect(x: x, y: y, width: Int(textWidth), height: 22)
+                let label = UILabel(frame: frame)
+                label.text = text
+                label.textColor = #colorLiteral(red: 0.7843137255, green: 0.7843137255, blue: 0.7843137255, alpha: 1) // 200, 200, 200
+                label.font = UIFont.systemFont(ofSize: 12)
+                label.cornerRadius = 2
+                label.borderWidth = 1
+                label.borderColor = #colorLiteral(red: 0.7843137255, green: 0.7843137255, blue: 0.7843137255, alpha: 1) // 200, 200, 200
+                addSubview(label)
+                
+                x = Int(frame.maxX) + 8
             })
         }
     }
