@@ -119,15 +119,14 @@ class DetailViewController: UIViewController {
     
     override func viewDidLayoutSubviews() {
         
-        // Set Main ScrollView
-        scrollView.contentSize = CGSize(width: scrollView.frame.width, height: scrollView.frame.height + 200)
-        
         // Set Image ScrollView
-        if let list = imageScrollView.imageUrlList {
-            
-            let contentWidth = list.count * imageScrollView.imageSpace + 10     // 10: 컨텐츠 사이즈 오른쪽 끝 여백
-            imageScrollView.contentSize = CGSize(width: contentWidth, height: imageScrollView.height)
-        }
+        imageScrollView.frame.size.height = imageScrollView.contentSize.height + 20
+        contentView.frame.origin.y = imageScrollView.frame.maxY + 8
+        categoryView.frame.origin.y = contentView.frame.maxY + 8
+        
+        // Set Main ScrollView
+        scrollView.frame.size.height = UIScreen.main.bounds.height
+        scrollView.contentSize = CGSize(width: scrollView.frame.width, height: categoryView.frame.maxY + 44)
     }
     
     /*
@@ -216,26 +215,39 @@ class ImageScrollView: UIScrollView {
             
             let _ = list.map({ (string) in
                 
-                let frame = CGRect(x: x, y: y, width: width, height: height)
-                let imageView = UIImageView(frame: frame)
-                
                 if let url = URL(string: string) {
                     
                     do {
                         
                         let data = try Data(contentsOf: url)
-                        imageView.image = UIImage(data: data)
+                        
+                        if let image = UIImage(data: data) {
+                            
+                            // 이미지 사이즈에 맞춰서 이미지뷰 비율 변경
+                            var frame = CGRect(x: x, y: y, width: width, height: height)
+                            
+                            if image.size.width > image.size.height {
+                                
+                                frame = CGRect(x: x, y: y, width: height, height: width)
+                            }
+                            
+                            // 이미지뷰 생성
+                            let imageView = UIImageView(frame: frame)
+                            imageView.contentMode = .scaleAspectFit
+                            imageView.image = image
+                            addSubview(imageView)
+                            
+                            x += Int(imageView.frame.size.width) + 10
+                            
+                            // 이미지 스크롤뷰 ContentSize 조정
+                            contentSize = CGSize(width: x, height: Int(imageView.frame.size.height))
+                        }
                     }
                     catch let error {
                         
                         print(error)
                     }
                 }
-                
-                imageView.contentMode = .scaleAspectFit
-                addSubview(imageView)
-                
-                x += imageSpace
             })
         }
     }
