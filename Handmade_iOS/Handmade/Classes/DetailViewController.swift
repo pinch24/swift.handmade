@@ -26,7 +26,7 @@ class DetailViewController: UIViewController {
     @IBOutlet weak var contentRatingLabel: UILabel!
     @IBOutlet weak var versionLabel: UILabel!
     @IBOutlet weak var showReleaseNoteButton: UIButton!
-    @IBOutlet weak var releaseNoteLabel: UILabel!
+    @IBOutlet weak var releaseNoteTextView: UITextView!
     @IBOutlet weak var descriptionTextView: UITextView!
     
     @IBOutlet weak var categoryView: CategoryView!
@@ -89,8 +89,9 @@ class DetailViewController: UIViewController {
         versionLabel.text = serviceItem.version
         
         // 새로운 기능: 내용
-        releaseNoteLabel.text = serviceItem.releaseNotes
-        releastNoteButtonTouchUpInside(showReleaseNoteButton)   // 새로운 기능 내용 숨김 처리
+        releaseNoteTextView.text = serviceItem.releaseNotes
+        // 새로운 기능 내용 숨김 처리
+        releastNoteButtonTouchUpInside(showReleaseNoteButton)
         
         // 설명
         descriptionTextView.text = serviceItem.description
@@ -163,42 +164,28 @@ class DetailViewController: UIViewController {
         
         UIView.animate(withDuration: 0.2, animations: {
             
-            //releaseNoteLabel.isHidden = !sender.isSelected
             if sender.isSelected {
                 
-                var frame = self.releaseNoteLabel.frame
-                frame.size.height = 0.0
-                self.releaseNoteLabel.frame = frame
+                // Hidden ReleaseNote
+                let height = self.releaseNoteTextView.frame.size.height
                 
-                frame = self.descriptionTextView.frame
-                frame.origin.y = self.releaseNoteLabel.frame.minY
-                self.descriptionTextView.frame = frame
+                self.scrollView.contentSize.height -= height
+                self.descriptionTextView.frame.origin.y -= height
+                self.contentView.frame.size.height -= height
+                self.categoryView.frame.origin.y -= height
                 
-                frame = self.contentView.frame
-                frame.size.height -= 44.0
-                self.contentView.frame = frame
-                
-                frame = self.categoryView.frame
-                frame.origin.y -= 44.0
-                self.categoryView.frame = frame
+                self.releaseNoteTextView.frame.size.height = 0
             }
             else {
                 
-                var frame = self.releaseNoteLabel.frame
-                frame.size.height = 44.0
-                self.releaseNoteLabel.frame = frame
+                // Show ReleaseNote
+                let size = self.releaseNoteTextView.sizeThatFits(CGSize(width: self.releaseNoteTextView.frame.size.width, height: self.releaseNoteTextView.frame.size.height))
+                self.releaseNoteTextView.frame.size.height = size.height
                 
-                frame = self.descriptionTextView.frame
-                frame.origin.y = self.releaseNoteLabel.frame.maxY + 8
-                self.descriptionTextView.frame = frame
-                
-                frame = self.contentView.frame
-                frame.size.height += 44.0
-                self.contentView.frame = frame
-                
-                frame = self.categoryView.frame
-                frame.origin.y += 44.0
-                self.categoryView.frame = frame
+                self.scrollView.contentSize.height += size.height
+                self.descriptionTextView.frame.origin.y += size.height
+                self.contentView.frame.size.height += size.height
+                self.categoryView.frame.origin.y += size.height
             }
         })
         
