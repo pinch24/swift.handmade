@@ -18,7 +18,7 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         
         // Json from URL
-        let urlString = "https://itunes.apple.com/search?term=핸드메이드&country=kr&media=software"
+        let urlString = "https://itunes.apple.com/search?term=게임&country=kr&media=software"
         let escapeString = urlString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? urlString
 
         if let url = URL(string: escapeString) {
