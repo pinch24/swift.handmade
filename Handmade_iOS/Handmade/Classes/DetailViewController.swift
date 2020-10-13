@@ -53,25 +53,28 @@ class DetailViewController: UIViewController {
         formatter.numberStyle = .decimal
         
         // 가격
-        if serviceItem.formattedPrice.contains("무료") {
-            
-            priceLabel.text = "무료"
-        }
-        else {
-            
-            let price = Int(serviceItem.price)
-            
-            if let formattedNumber = formatter.string(from: NSNumber(value: price)) {
-                
-                let string = NSMutableAttributedString(string: "\(formattedNumber) 원")
-                
-                let attribute = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14)]
-                let range = NSRange(location: string.length - 1, length: 1)
-                string.addAttributes(attribute, range: range)
-                
-                priceLabel.attributedText = string
-            }
-        }
+		if let price = serviceItem.formattedPrice {
+			
+			if price.contains("무료") {
+				
+				priceLabel.text = "무료"
+			}
+			else {
+				
+				let price = Int(serviceItem.price ?? 0.0)
+				
+				if let formattedNumber = formatter.string(from: NSNumber(value: price)) {
+					
+					let string = NSMutableAttributedString(string: "\(formattedNumber) 원")
+					
+					let attribute = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14)]
+					let range = NSRange(location: string.length - 1, length: 1)
+					string.addAttributes(attribute, range: range)
+					
+					priceLabel.attributedText = string
+				}
+			}
+		}
         
         // 파일 크기
         let fileSize = Int(serviceItem.fileSizeBytes)

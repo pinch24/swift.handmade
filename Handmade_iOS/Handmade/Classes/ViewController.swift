@@ -18,7 +18,7 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         
         // Json from URL
-        let urlString = "https://itunes.apple.com/search?term=게임&country=kr&media=software"
+        let urlString = "https://itunes.apple.com/search?term=game&country=kr&media=software"
         let escapeString = urlString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? urlString
 
         if let url = URL(string: escapeString) {
@@ -103,7 +103,7 @@ struct ServiceItem: Codable {
     var primaryGenreName: String
     var genreIds: [String]
     var primaryGenreId: Int
-    var formattedPrice: String
+    var formattedPrice: String?
     var trackName: String
     var trackId: Int
     
@@ -117,7 +117,7 @@ struct ServiceItem: Codable {
     var artistId: Int
     var artistName: String
     var genres: [String]
-    var price: Float
+    var price: Float?
     var description: String
     
     var bundleId: String
